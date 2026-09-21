@@ -1,0 +1,1123 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Ascension Wheel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;900&family=Hanken+Grotesk:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap">
+<style>
+  :root{
+    color-scheme:dark;
+    --bg:#0E1018;
+    --surface:#161923;
+    --surface-2:#1B1E29;
+    --text:#F2F2EE;
+    --text-dim:#9BA0AE;
+    --border:rgba(242,242,238,.18);
+    --accent:#8593FF;
+    --accent-2:#8593FF;
+    --code-bg:#1B1E29;
+  }
+
+  *{box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:"Hanken Grotesk",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 96px;}
+  h1,h2,h3{font-family:"Unbounded",system-ui,sans-serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;margin:0;}
+  .hud{font-family:"Rajdhani",system-ui,sans-serif;font-variant-numeric:tabular-nums;}
+
+  .masthead{max-width:720px;margin:0 auto;padding:56px 20px 32px;text-align:center;}
+  .eyebrow{font-family:"Hanken Grotesk",sans-serif;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:12.5px;color:var(--accent);margin-bottom:14px;}
+  .masthead h1{font-size:clamp(30px,4.4vw,44px);letter-spacing:-.02em;}
+  .masthead p{color:var(--text-dim);font-size:16px;line-height:1.6;max-width:58ch;margin:16px auto 0;}
+  .masthead p.attrib{font-size:14.5px;max-width:56ch;padding-top:16px;margin-top:16px;border-top:1px solid var(--border);}
+
+  .stage-shell{max-width:1080px;margin:0 auto 12px;padding:0 20px;}
+  .picker-hint{text-align:center;font-size:12.5px;font-weight:600;color:var(--accent);margin:0 0 10px;letter-spacing:.01em;}
+  .theme-picker{display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap;}
+  .theme-picker button{font-family:"Hanken Grotesk",sans-serif;font-weight:600;font-size:14px;letter-spacing:.01em;padding:8px 18px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;transition:transform .15s ease,border-color .15s ease,color .15s ease,box-shadow .15s ease;}
+  .theme-picker button:hover{transform:translateY(-2px);border-color:var(--accent);color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.25);}
+  .theme-picker button[aria-pressed="true"]{color:var(--text);border-color:var(--accent);background:var(--surface-2);}
+  .theme-picker button:disabled{opacity:.45;cursor:not-allowed;}
+  .theme-picker button.bespoke{opacity:.65;border-style:dashed;}
+  .theme-picker .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle;}
+  .picker-note{text-align:center;font-size:12.5px;color:var(--text-dim);margin-bottom:14px;}
+  .next-theme{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin:8px 0 40px;}
+  .next-theme-label{font-family:"Hanken Grotesk",sans-serif;font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);}
+  .next-theme-btn{display:inline-flex;align-items:center;gap:9px;font-family:"Hanken Grotesk",sans-serif;font-weight:700;font-size:16px;padding:11px 22px;border-radius:999px;border:1px solid var(--accent);background:var(--surface-2);color:var(--text);cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;}
+  .next-theme-btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 8px 20px rgba(0,0,0,.3);}
+  .next-theme-btn .dot{display:inline-block;width:9px;height:9px;border-radius:50%;}
+  .next-theme-arrow{color:var(--accent);}
+
+  .stage{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:1920/900;min-height:460px;color:#f5ede1;isolation:isolate;box-shadow:0 20px 50px -20px rgba(0,0,0,.45);background:#0a0806;}
+  .stage-bg{position:absolute;inset:0;background-image:var(--bg-img);background-size:cover;background-position:center;}
+  .stage-bg::before, .stage-bg::after{content:"";position:absolute;inset:0;}
+  .stage-bg::before{background:radial-gradient(70% 60% at 50% 8%, var(--glow-strong) 0%, transparent 65%);mix-blend-mode:screen;opacity:.6;animation:shimmer 7s ease-in-out infinite;}
+  .stage-bg::after{background:linear-gradient(180deg, rgba(6,4,2,.15) 0%, rgba(6,4,2,.55) 100%);}
+  @keyframes shimmer{0%,100%{opacity:.45;}50%{opacity:.75;}}
+  .motes{position:absolute;inset:0;overflow:hidden;}
+  .mote{position:absolute;bottom:-6%;border-radius:50%;background:var(--spark);opacity:0;filter:blur(.2px);box-shadow:0 0 6px var(--spark);animation:rise linear infinite;}
+  @keyframes rise{0%{transform:translateY(0) translateX(0);opacity:0;}10%{opacity:.85;}100%{transform:translateY(-70vh) translateX(var(--drift,0px));opacity:0;}}
+  @media (prefers-reduced-motion:reduce){ .stage-bg::before{animation:none;} .mote{animation:none;display:none;} }
+
+  .stage-ui{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:230px 1fr 230px;grid-template-areas:"left center right";gap:14px;padding:20px;align-items:start;}
+  @media (max-width:820px){ .stage{aspect-ratio:auto;} .stage-ui{height:auto;grid-template-columns:1fr;grid-template-rows:auto auto auto;grid-template-areas:"center" "left" "right";padding:16px;} }
+
+  .panel{grid-area:left;background:rgba(8,6,4,.46);border:1px solid rgba(224,178,74,.25);border-radius:14px;padding:14px;backdrop-filter:blur(6px);}
+  .tabs{display:flex;gap:6px;margin-bottom:12px;}
+  .tab{flex:1;font-family:"Rajdhani",sans-serif;font-weight:600;font-size:13.5px;padding:9px 8px;border-radius:9px;border:none;cursor:pointer;background:rgba(255,255,255,.06);color:#e7dccb;letter-spacing:.02em;}
+  .tab[aria-selected="true"]{background:linear-gradient(180deg,#f3d989,#c99a2e);color:#3a2606;}
+  .quest-card{background:rgba(0,0,0,.28);border-radius:10px;padding:12px;}
+  .quest-top{display:flex;align-items:center;justify-content:space-between;font-size:13.5px;margin-bottom:9px;}
+  .quest-top .count{font-family:"Rajdhani",sans-serif;color:#cbbfae;font-variant-numeric:tabular-nums;}
+  .bar{height:6px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden;}
+  .bar > i{display:block;height:100%;background:linear-gradient(90deg,#c99a2e,#f3d989);border-radius:99px;transition:width .5s ease;}
+  .rewards-list{display:flex;flex-direction:column;gap:8px;font-size:13px;color:#d8cbb8;margin:0;padding:0;}
+  .rewards-list li{list-style:none;display:flex;justify-content:space-between;background:rgba(0,0,0,.22);padding:8px 10px;border-radius:8px;}
+
+  .center-col{grid-area:center;display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:2px;}
+  .spin-count{font-family:"Rajdhani",sans-serif;font-weight:700;font-size:clamp(15px,1.9vw,20px);letter-spacing:.03em;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.6);}
+
+  .wheel-box{position:relative;width:min(58vw,360px);aspect-ratio:1;filter:drop-shadow(0 18px 30px rgba(0,0,0,.55));}
+  .ring-assembly{position:absolute;inset:0;transition:transform 4.2s cubic-bezier(.11,.79,.15,1);will-change:transform;}
+  .ring-img{position:absolute;top:50%;left:50%;translate:-50% -50%;pointer-events:none;}
+  .ring-dividers{position:absolute;top:50%;left:50%;translate:-50% -50%;aspect-ratio:1;pointer-events:none;}
+  .divider-line{position:absolute;top:50%;left:50%;width:50%;height:1px;transform-origin:0 50%;}
+  .seg-icon{position:absolute;top:0;left:0;will-change:transform;display:flex;flex-direction:column;align-items:center;}
+  .seg-icon img{display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6));}
+
+  .pointer-wrap{position:absolute;top:-3%;left:50%;translate:-50% 0;z-index:6;width:12%;}
+  .pointer-wrap img{width:100%;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,.55));}
+
+  .hub-btn{position:absolute;top:50%;left:50%;translate:-50% -50%;width:15.5%;aspect-ratio:1;border-radius:50%;border:none;cursor:pointer;background-image:var(--hub-img);background-size:cover;background-position:center;z-index:7;animation:breathe 2.6s ease-in-out infinite;padding:0;}
+  .hub-btn.spinning{animation:none;scale:.96;}
+  .hub-btn:disabled{cursor:default;}
+  @keyframes breathe{
+    0%,100%{scale:1;filter:drop-shadow(0 0 0px rgba(224,178,74,0));}
+    50%{scale:1.05;filter:drop-shadow(0 0 12px rgba(224,178,74,.65));}
+  }
+  @media (prefers-reduced-motion:reduce){ .hub-btn{animation:none;} }
+
+  .win-flash{position:absolute;top:1%;left:50%;translate:-50% 0;font-family:"Rajdhani",sans-serif;font-weight:700;font-size:14px;letter-spacing:.03em;background:linear-gradient(180deg,#f3d989,#c99a2e);color:#3a2606;padding:6px 14px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .25s, transform .25s;z-index:8;}
+  .win-flash.show{opacity:1;transform:translate(-50%,10px);}
+
+  .autospin{font-family:"Rajdhani",sans-serif;font-weight:600;letter-spacing:.04em;font-size:13px;display:flex;align-items:center;gap:7px;padding:6px 16px;border-radius:999px;border:1px solid rgba(224,178,74,.35);background:rgba(0,0,0,.35);color:#e9dcc8;cursor:pointer;margin-top:4px;}
+  .autospin[aria-pressed="true"]{background:linear-gradient(180deg,#f3d989,#c99a2e);color:#3a2606;border-color:transparent;}
+  .autospin svg{width:15px;height:15px;}
+
+  .collection{grid-area:right;background:rgba(8,6,4,.46);border:1px solid rgba(224,178,74,.25);border-radius:14px;padding:14px;backdrop-filter:blur(6px);}
+  .collection h3{font-family:"Rajdhani",sans-serif;font-size:16px;color:#fff;letter-spacing:.02em;margin:0;}
+  .collection .sub{font-size:12px;color:#b9ab98;margin:2px 0 12px;}
+  .collect-row{display:flex;gap:10px;align-items:center;background:rgba(0,0,0,.26);border-radius:10px;padding:8px;margin-bottom:8px;}
+  .collect-row:last-child{margin-bottom:0;}
+  .collect-icon{width:32px;height:32px;flex:none;}
+  .collect-icon img{width:100%;height:100%;object-fit:contain;}
+  .collect-meta{flex:1;min-width:0;}
+  .collect-meta .name{font-size:13px;font-weight:600;color:#f3ece1;}
+  .collect-meta .prog{font-size:11.5px;color:#a8998a;margin:1px 0 5px;font-variant-numeric:tabular-nums;}
+
+  .stage-caption{font-size:13px;color:var(--text-dim);text-align:center;padding:10px 20px 0;}
+  .stage-caption code{background:var(--code-bg);border-radius:5px;padding:1px 6px;font-size:12px;}
+
+  section{margin-top:64px;}
+  section .num{font-family:"Hanken Grotesk",sans-serif;font-weight:700;color:var(--accent);font-size:13px;letter-spacing:.14em;margin-bottom:8px;}
+  section h2{font-size:clamp(21px,2.6vw,26px);margin-bottom:14px;}
+  section > p.lede{color:var(--text-dim);max-width:62ch;line-height:1.7;font-size:15.5px;}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:8px;}
+  .about-grid p.lede{max-width:none;}
+  @media (max-width:700px){ .about-grid{grid-template-columns:1fr;} }
+
+  .bg-preview{margin-top:20px;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--surface);}
+  .bg-preview img{display:block;width:100%;aspect-ratio:1920/900;object-fit:cover;}
+
+  .control-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:20px;}
+  .control-card{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface);}
+  .control-swatch{height:180px;display:flex;align-items:center;justify-content:center;background:
+      repeating-conic-gradient(#e4e4e0 0% 25%, #eeeeeb 0% 50%) 50% / 22px 22px, #e4e4e0;}
+  .control-swatch img{max-width:62%;max-height:62%;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5));}
+  .control-label{padding:11px 14px;}
+  .control-label b{display:block;font-size:13.5px;}
+  .control-label span{display:block;font-family:ui-monospace,"SFMono-Regular",Menlo,monospace;font-size:12px;color:var(--text-dim);margin-top:2px;}
+  .ring-asset-group{margin-top:26px;}
+  .ring-asset-group:first-child{margin-top:20px;}
+  .ring-asset-header{font-family:"Unbounded",sans-serif;font-weight:600;font-size:14px;letter-spacing:-.005em;margin-bottom:12px;}
+
+  .prize-group{margin-top:26px;}
+  .prize-group:first-child{margin-top:20px;}
+  .prize-group-header{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;}
+  .prize-group-header b{font-family:"Unbounded",sans-serif;font-weight:600;font-size:14px;letter-spacing:-.005em;}
+  .prize-group-header span{font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;}
+  .prize-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;}
+  .prize-tile{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+  .prize-swatch{height:88px;display:flex;align-items:center;justify-content:center;background:
+      repeating-conic-gradient(#e4e4e0 0% 25%, #eeeeeb 0% 50%) 50% / 18px 18px, #e4e4e0;}
+  .prize-swatch img{max-width:66%;max-height:66%;object-fit:contain;filter:drop-shadow(0 3px 7px rgba(0,0,0,.5));}
+  .prize-name{padding:8px 10px;font-size:12.5px;text-align:center;}
+
+  footer{max-width:720px;margin:72px auto 0;padding:24px 20px 0;border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:13px;}
+
+  .back-home{position:fixed;top:18px;left:18px;z-index:50;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:"Hanken Grotesk",sans-serif;font-weight:600;font-size:13.5px;color:var(--text);background:rgba(8,6,4,.55);border:1px solid var(--border);padding:9px 16px 9px 12px;border-radius:999px;backdrop-filter:blur(6px);transition:background .15s ease,transform .15s ease;}
+  .back-home:hover{background:rgba(8,6,4,.8);transform:translateY(-1px);}
+  .back-home svg{width:16px;height:16px;flex:none;}
+  @media (max-width:480px){ .back-home span{display:none;} .back-home{padding:9px;} }
+</style>
+
+<a class="back-home" href="../#/work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4"/><path d="m11 5-7 7 7 7"/></svg><span>All projects</span></a>
+<div class="masthead">
+  <div class="eyebrow">Case study · Lynon</div>
+  <h1>Ascension Wheel</h1>
+  <p class="attrib">Visual production — every background, control, frame and prize icon here. UX and interaction logic are built separately by Lynon's product team. Most partners pick a theme from this shared library and a few get a fully bespoke wheel instead.</p>
+</div>
+
+<div class="stage-shell">
+  <p class="picker-hint">Click a pill to preview that theme, live ↓</p>
+  <div class="theme-picker" id="themePicker">
+    <button data-theme="greek" aria-pressed="true"><span class="dot" style="background:#e0b24a"></span>Greek Gods</button>
+    <button data-theme="lava" aria-pressed="false"><span class="dot" style="background:#ff7a3d"></span>Lava</button>
+    <button data-theme="ggplay" aria-pressed="false"><span class="dot" style="background:#a855f7"></span>GGplay</button>
+    <button data-theme="fifa" aria-pressed="false"><span class="dot" style="background:#d4af37"></span>FIFA 26</button>
+    <button data-theme="taza" aria-pressed="false"><span class="dot" style="background:#c41e2d"></span>Tazabet</button>
+    <button data-theme="hayebet" aria-pressed="false"><span class="dot" style="background:#8ed15a"></span>Savanna</button>
+    <button data-theme="thunder" aria-pressed="false"><span class="dot" style="background:#3c6eff"></span>Raidenbet — Thunder</button>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="stage-bg" id="stageBg"><div class="motes" id="motes"></div></div>
+
+    <div class="stage-ui">
+      <div class="panel">
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" id="tabAch" aria-selected="true">Achievements</button>
+          <button class="tab" role="tab" id="tabRew" aria-selected="false">My rewards</button>
+        </div>
+        <div id="panelAch">
+          <div class="quest-card">
+            <div class="quest-top"><span>Reach the inner ring</span><span class="count" id="tierCount">0/1</span></div>
+            <div class="bar"><i id="tierBar" style="width:0%"></i></div>
+          </div>
+        </div>
+        <ul class="rewards-list" id="panelRew" hidden>
+          <li><span>Welcome ticket</span><span>Claimed</span></li>
+          <li><span>First ascension</span><span>Pending</span></li>
+        </ul>
+      </div>
+
+      <div class="center-col">
+        <div class="spin-count hud"><span id="spinCount">0</span> Spin</div>
+        <div class="wheel-box">
+          <div class="ring-assembly" id="ringAssembly"></div>
+          <div class="pointer-wrap"><img src="assets/greek/pointer.webp" alt=""></div>
+          <button class="hub-btn" id="hub" aria-label="Spin the wheel"></button>
+          <div class="win-flash" id="winFlash"></div>
+        </div>
+        <button class="autospin" id="autospin" aria-pressed="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+          Autospin
+        </button>
+      </div>
+
+      <div class="collection">
+        <h3>My Collection</h3>
+        <div class="sub">Best pulls land on the inner ring</div>
+        <div id="collectRows"></div>
+      </div>
+    </div>
+  </div>
+  <p class="stage-caption">1920×900 stage · real exported assets, config-driven ring layout — no hand-tuned pixel positions.</p>
+</div>
+
+<div class="wrap">
+
+  <section id="asset-bg">
+    <div class="num">01 — Background</div>
+    <h2>1920 × 900 stage plate</h2>
+    <p class="lede">The scene the whole wheel sits on, exported as one piece — changes completely per theme, everything else on the rig stays the same.</p>
+    <div class="bg-preview"><img id="bgImage" src="assets/greek/bg.jpg" alt="Background artwork"></div>
+  </section>
+
+  <section id="asset-controls">
+    <div class="num">02 — Controls</div>
+    <h2>Pointer &amp; spin button</h2>
+    <p class="lede">The two pieces that never rotate with the wheel — shown here on a light ground so the transparent edges read clearly.</p>
+    <div class="control-grid">
+      <div class="control-card">
+        <div class="control-swatch"><img id="pointerImg" src="assets/greek/pointer.webp" alt="Pointer arrow asset"></div>
+        <div class="control-label"><b>Pointer</b><span id="pointerFile">arrow.png</span></div>
+      </div>
+      <div class="control-card">
+        <div class="control-swatch"><img id="hubImg" src="assets/greek/hub.webp" alt="Spin button asset"></div>
+        <div class="control-label"><b>Spin button</b><span id="hubFile">spin button.png</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="asset-rings">
+    <div class="num">03 — Level assets</div>
+    <h2>Background &amp; frame, per ring</h2>
+    <p class="lede">Each ring is two exported layers stacked on the same geometry: a background plate and a frame or border on top of it. Shown here separately so the construction is legible; the wheel above shows them composited.</p>
+    <div id="ringAssetGroups"></div>
+  </section>
+
+  <section id="asset-prizes">
+    <div class="num">04 — Prizes</div>
+    <h2 id="prizesHeading">22 icons</h2>
+    <p class="lede">Every prize graphic in the pack. Where each one lands — which ring, which segment — is a call partners make per brand; the wheel above already shows value climbing toward the center.</p>
+    <div id="prizeGroups"></div>
+  </section>
+
+  <section id="about">
+    <div class="num">05 — About this case study</div>
+    <h2>One system, re-skinned per brand</h2>
+    <div class="about-grid">
+      <p class="lede">User acquisition &amp; retention tool. “Spinner Winner” drives engagement through an achievement-to-prize system — the real design problem was keeping one visual system flexible enough to be re-skinned per partner brand without ever touching the mechanic underneath.</p>
+      <p class="lede">Three concentric rings, any number of segments per ring, value always reading clearer toward the center no matter the theme. Everything below is a real production asset running on the live rig, so switching themes swaps the whole visual language while the underlying geometry never moves.</p>
+    </div>
+  </section>
+
+  <div class="next-theme" id="nextThemeNav">
+    <span class="next-theme-label">Next theme</span>
+    <button class="next-theme-btn" id="nextThemeBtn" type="button">
+      <span class="dot" id="nextThemeDot"></span><span id="nextThemeName">Lava</span><span class="next-theme-arrow">→</span>
+    </button>
+  </div>
+
+  <footer>Ascension Wheel — a multi-brand prize-wheel visual system · art direction &amp; visual design by me at Lynon</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var GREEK = {
+    key:"greek",
+    label:"Greek Gods",
+    bg:"assets/greek/bg.jpg",
+    glowStrong:"rgba(255,224,150,.55)",
+    spark:"#f3d989",
+    hub:"assets/greek/hub.webp",
+    hubFile:"spin button.png",
+    pointer:"assets/greek/pointer.webp",
+    pointerFile:"arrow.png",
+    prizesDir:"assets/greek/prizes/",
+    collectibles:[
+      {key:"car", label:"Chariot", icon:"Car.webp", max:3},
+      {key:"phone", label:"Oracle's phone", icon:"Phone.webp", max:3},
+      {key:"gem", label:"Zeus gem", icon:"Diamond.webp", max:5}
+    ],
+    extraGroups:[
+      { title:"Also in the pack", sub:"not wired into the demo", items:[
+        {icon:"bonus_150.webp", label:"Bonus $150"},
+        {icon:"bonus_200.webp", label:"Bonus $200"},
+        {icon:"Try_again.webp", label:"Try again"}
+      ]}
+    ],
+    rings:[
+      { // outer
+        frame:"assets/greek/outer-frame.webp", frameSize:1096,
+        face:"assets/greek/outer-layer.webp", faceSize:1001,
+        iconRadiusPct:40, iconSizePct:10, dividerOuter:45.5, dividerInner:34.5, dividerColor:"rgba(60,42,26,.4)",
+        segments:[
+          {label:"$25", icon:"25.webp"},
+          {label:"2×FS", icon:"FS_2.webp"},
+          {label:"Bonus $25", icon:"bonus_25.webp"},
+          {label:"Gem", icon:"Diamond.webp", collect:"gem"},
+          {label:"$50", icon:"50.webp"},
+          {label:"4×FS", icon:"FS_4.webp"},
+          {label:"Ticket", icon:"Ticket.webp"},
+          {label:"Bonus $50", icon:"bonus_50.webp"},
+          {label:"$25", icon:"25.webp"},
+          {label:"Ticket", icon:"Ticket-1.webp"}
+        ]
+      },
+      { // middle
+        frame:"assets/greek/middle-frame.webp", frameSize:760,
+        face:"assets/greek/middle-fill.webp", faceSize:300, faceScale:2.35,
+        iconRadiusPct:26.5, iconSizePct:10.5, dividerOuter:34.5, dividerInner:21, dividerColor:"rgba(255,244,222,.4)",
+        segments:[
+          {label:"$100", icon:"100.webp"},
+          {label:"8×FS", icon:"FS_8.webp"},
+          {label:"Bonus $100", icon:"bonus_100.webp"},
+          {label:"$150", icon:"150.webp"},
+          {label:"Next level", icon:"Next_level.webp"},
+          {label:"10×FS", icon:"FS_10.webp"}
+        ]
+      },
+      { // inner
+        frame:"assets/greek/inner-frame.webp", frameSize:460,
+        face:"assets/greek/inner-layer.webp", faceSize:420,
+        iconRadiusPct:13.5, iconSizePct:11, dividerOuter:21, dividerInner:8, dividerColor:"rgba(90,50,10,.3)",
+        segments:[
+          {label:"Chariot", icon:"Car.webp", collect:"car"},
+          {label:"Oracle phone", icon:"Phone.webp", collect:"phone"},
+          {label:"$200", icon:"200.webp"},
+          {label:"20×FS", icon:"FS_20.webp"}
+        ]
+      }
+    ]
+  };
+
+  var LAVA = {
+    key:"lava",
+    label:"Lava",
+    dedupeRingAssets:true,
+    bg:"assets/lava/bg.avif",
+    glowStrong:"rgba(255,96,32,.6)",
+    spark:"#ff8a3d",
+    hub:"assets/lava/hub.webp",
+    hubFile:"Wheel Spin Button.png",
+    pointer:"assets/lava/pointer.webp",
+    pointerFile:"Arrow.png",
+    prizesDir:"assets/lava/prizes/",
+    collectibles:[
+      {key:"ticket", label:"Ticket", icon:"Ticket_1.webp", max:5},
+      {key:"bonus100", label:"$100 Bonus", icon:"100_bonus.webp", max:3},
+      {key:"bonus200", label:"$200 Bonus", icon:"200_bonus.webp", max:3}
+    ],
+    extraGroups:[
+      { title:"Also in the pack", sub:"not wired into the demo", items:[
+        {icon:"50_cash.webp", label:"$50"},
+        {icon:"50_bonus.webp", label:"Bonus $50"},
+        {icon:"Tray_again.webp", label:"Try again"}
+      ]},
+      { title:"Bonus icon set", sub:"alternate reward icons, unused here", items:[
+        {icon:"other_1.webp", label:"Ember crest"},
+        {icon:"other_2.webp", label:"Frost shard"},
+        {icon:"other_3.webp", label:"Ember heart"},
+        {icon:"other_4.webp", label:"Ice core"},
+        {icon:"other_5.webp", label:"Sapphire crest"},
+        {icon:"other_6.webp", label:"Star badge"},
+        {icon:"other_7.webp", label:"Magma orb"},
+        {icon:"other_8.webp", label:"Volt badge"},
+        {icon:"other_9.webp", label:"Crystal cube"},
+        {icon:"other_10.webp", label:"Blazing rank"},
+        {icon:"other_11.webp", label:"Amethyst cube"},
+        {icon:"other_12.webp", label:"Star crest"},
+        {icon:"other_13.webp", label:"Storm bolt"},
+        {icon:"other_14.webp", label:"Molten core"},
+        {icon:"other_15.webp", label:"Champion crest"}
+      ]}
+    ],
+    rings:[
+      { // outer
+        frame:"assets/lava/outer-frame.webp", frameSize:560, frameBehind:true,
+        face:"assets/lava/outer-layer.webp", faceSize:500,
+        iconRadiusPct:39, iconSizePct:9.7, dividerOuter:44.5, dividerInner:33.5, dividerColor:"rgba(255,150,60,.4)",
+        segments:[
+          {label:"2×FS", icon:"2_FS.webp"},
+          {label:"5×FS", icon:"5_FS.webp"},
+          {label:"10×FS", icon:"10_FS.webp"},
+          {label:"15×FS", icon:"15_FS.webp"},
+          {label:"$10", icon:"10_cash.webp"},
+          {label:"Bonus $10", icon:"10_bonus.webp"},
+          {label:"$15", icon:"15_cash.webp"},
+          {label:"Bonus $15", icon:"15_bonus.webp"},
+          {label:"Ticket", icon:"Ticket_1.webp", collect:"ticket"},
+          {label:"Ticket", icon:"Ticket_2.webp"}
+        ]
+      },
+      { // middle
+        frame:"assets/lava/middle-frame.webp", frameSize:380,
+        face:"assets/lava/middle-layer.webp", faceSize:360,
+        iconRadiusPct:25.4, iconSizePct:9, dividerOuter:30.5, dividerInner:20.2, dividerColor:"rgba(255,120,40,.35)",
+        segments:[
+          {label:"20×FS", icon:"20_FS.webp"},
+          {label:"25×FS", icon:"25_FS.webp"},
+          {label:"$20", icon:"20_cash.webp"},
+          {label:"Bonus $20", icon:"20_bonus.webp"},
+          {label:"Next level", icon:"Next_level.webp"}
+        ]
+      },
+      { // inner
+        frame:"assets/lava/inner-frame.webp", frameSize:230,
+        face:"assets/lava/inner-layer.webp", faceSize:211,
+        iconRadiusPct:13.2, iconSizePct:9.3, dividerOuter:18.6, dividerInner:7.8, dividerColor:"rgba(255,160,60,.3)",
+        segments:[
+          {label:"$100", icon:"100_cash.webp"},
+          {label:"Bonus $100", icon:"100_bonus.webp", collect:"bonus100"},
+          {label:"$200", icon:"200_cash.webp"},
+          {label:"Bonus $200", icon:"200_bonus.webp", collect:"bonus200"}
+        ]
+      }
+    ]
+  };
+
+  var GGPLAY = {
+    key:"ggplay",
+    label:"GGplay",
+    dedupeRingAssets:true,
+    bg:"assets/ggplay/bg.avif",
+    glowStrong:"rgba(168,85,247,.6)",
+    spark:"#c084fc",
+    hub:"assets/ggplay/hub.webp",
+    hubFile:"Spin.png",
+    pointer:"assets/ggplay/pointer.webp",
+    pointerFile:"Arrow.png",
+    prizesDir:"assets/ggplay/prizes/",
+    collectibles:[
+      {key:"respin", label:"Re-Spin", icon:"re_spin.webp", max:5},
+      {key:"chip100", label:"$100 Chip", icon:"100_cash.webp", max:3},
+      {key:"jackpot", label:"Jackpot Piece", icon:"ps5.webp", max:1}
+    ],
+    rings:[
+      { // outer
+        frame:"assets/ggplay/outer-frame.webp", frameSize:562,
+        face:"assets/ggplay/outer-layer.webp", faceSize:500,
+        iconRadiusPct:39.1, iconSizePct:9.8, dividerOuter:44.5, dividerInner:33.8, dividerColor:"rgba(168,85,247,.4)",
+        segments:[
+          {label:"No Prize", icon:"no_prize.webp"},
+          {label:"Re-Spin", icon:"re_spin.webp", collect:"respin"},
+          {label:"Next level", icon:"next_level.webp"},
+          {label:"$10", icon:"10_cash.webp"},
+          {label:"$20", icon:"20_cash.webp"},
+          {label:"$50", icon:"50_cash.webp"}
+        ]
+      },
+      { // middle
+        frame:"assets/ggplay/middle-frame.webp", frameSize:380,
+        face:"assets/ggplay/middle-layer.webp", faceSize:360,
+        iconRadiusPct:26.2, iconSizePct:10.5, dividerOuter:32, dividerInner:20.5, dividerColor:"rgba(192,132,252,.35)",
+        segments:[
+          {label:"$100", icon:"100_cash.webp", collect:"chip100"},
+          {label:"$200", icon:"200_cash.webp"},
+          {label:"$500", icon:"500_cash.webp"},
+          {label:"Next level", icon:"next_level.webp"},
+          {label:"No Prize", icon:"no_prize.webp"}
+        ]
+      },
+      { // inner
+        frame:"assets/ggplay/inner-frame.webp", frameSize:230,
+        face:"assets/ggplay/inner-layer.webp", faceSize:210,
+        iconRadiusPct:13, iconSizePct:10.2, dividerOuter:18.7, dividerInner:7.4, dividerColor:"rgba(216,180,254,.3)",
+        segments:[
+          {label:"PS5 Pro", icon:"ps5.webp", collect:"jackpot"},
+          {label:"17 Pro Max", icon:"phone17.webp"},
+          {label:"$500", icon:"500_cash.webp"}
+        ]
+      }
+    ]
+  };
+
+  var FIFA = {
+    key:"fifa",
+    label:"FIFA 26",
+    bg:"assets/fifa/bg.webp",
+    glowStrong:"rgba(212,175,55,.6)",
+    spark:"#d4af37",
+    hub:"assets/fifa/hub.webp",
+    hubFile:"Spin button.webp",
+    pointer:"assets/fifa/pointer.webp",
+    pointerFile:"arrow animated.webp",
+    prizesDir:"assets/fifa/prizes/",
+    collectibles:[
+      {key:"freespin", label:"Free Spins", icon:"freespin_10.webp", max:5},
+      {key:"freebet", label:"Free Bet", icon:"freebet_10.webp", max:3},
+      {key:"jackpot", label:"$5000 Bonus", icon:"bonus_5000.webp", max:1}
+    ],
+    extraGroups:[
+      { title:"Also in the pack — USD", sub:"not wired into the demo", items:[
+        {icon:"bonus_1.webp", label:"$1 Bonus"},
+        {icon:"bonus_4.webp", label:"$4 Bonus"},
+        {icon:"bonus_10.webp", label:"$10 Bonus"},
+        {icon:"freespin_300.webp", label:"300 Free Spins"}
+      ]},
+      { title:"TRY localization set", sub:"alternate currency, unused here", items:[
+        {icon:"freebet_50_try.webp", label:"Free Bet 50 TRY"},
+        {icon:"freebet_250_try.webp", label:"Free Bet 250 TRY"},
+        {icon:"freebet_500_try.webp", label:"Free Bet 500 TRY"},
+        {icon:"freebet_750_try.webp", label:"Free Bet 750 TRY"},
+        {icon:"freebet_5000_try.webp", label:"Free Bet 5000 TRY"},
+        {icon:"bonus_50_try.webp", label:"Bonus 50 TRY"},
+        {icon:"bonus_200_try.webp", label:"Bonus 200 TRY"},
+        {icon:"bonus_500_try.webp", label:"Bonus 500 TRY"},
+        {icon:"bonus_45k_try.webp", label:"Bonus 45K TRY"},
+        {icon:"bonus_50k_try.webp", label:"Bonus 50K TRY"},
+        {icon:"bonus_230k_try.webp", label:"Bonus 230K TRY"},
+        {icon:"try_again_try.webp", label:"Try Again (TR)"}
+      ]},
+      { title:"Alt scatter icons", sub:"symbol variants, unused", items:[
+        {icon:"freespin_100_symbol.webp", label:"100 FS symbol"},
+        {icon:"freespin_300_symbol.webp", label:"300 FS symbol"},
+        {icon:"freebet_5000_try_symbol.webp", label:"5000 TRY symbol"},
+        {icon:"bonus_45k_try_symbol.webp", label:"45K TRY symbol"},
+        {icon:"bonus_50k_try_symbol.webp", label:"50K TRY symbol"}
+      ]}
+    ],
+    rings:[
+      { // outer
+        frame:"assets/fifa/outer-frame.webp", frameSize:1096,
+        face:"assets/fifa/outer-layer.webp", faceSize:1000,
+        iconRadiusPct:38.2, iconSizePct:12.5, dividerOuter:45.6, dividerInner:30.9, dividerColor:"rgba(212,175,55,.4)",
+        segments:[
+          {label:"Try Again", icon:"try_again.webp"},
+          {label:"Next level", icon:"next_level.webp"},
+          {label:"10 Free Spins", icon:"freespin_10.webp", collect:"freespin"},
+          {label:"20 Free Spins", icon:"freespin_20.webp"},
+          {label:"40 Free Spins", icon:"freespin_40.webp"},
+          {label:"100 Free Spins", icon:"freespin_100.webp"}
+        ]
+      },
+      { // middle
+        frame:"assets/fifa/middle-frame.webp", frameSize:760,
+        face:"assets/fifa/middle-layer.webp", faceSize:600, faceScale:1.12,
+        iconRadiusPct:24.7, iconSizePct:10.5, dividerOuter:30.7, dividerInner:18.7, dividerColor:"rgba(212,175,55,.35)",
+        segments:[
+          {label:"$1 Free Bet", icon:"freebet_1.webp"},
+          {label:"$5 Free Bet", icon:"freebet_5.webp"},
+          {label:"$10 Free Bet", icon:"freebet_10.webp", collect:"freebet"},
+          {label:"$15 Free Bet", icon:"freebet_15.webp"},
+          {label:"$100 Free Bet", icon:"freebet_100.webp"}
+        ]
+      },
+      { // inner
+        frame:"assets/fifa/inner-frame.webp", frameSize:460,
+        face:"assets/fifa/inner-layer.webp", faceSize:420, faceScale:1.05,
+        iconRadiusPct:13.7, iconSizePct:10.5, dividerOuter:20.1, dividerInner:7.3, dividerColor:"rgba(255,215,120,.3)",
+        segments:[
+          {label:"$900 Bonus", icon:"bonus_900.webp"},
+          {label:"$5000 Bonus", icon:"bonus_5000.webp", collect:"jackpot"}
+        ]
+      }
+    ]
+  };
+
+  var TAZA = {
+    key:"taza",
+    label:"Tazabet",
+    bg:"assets/taza/bg.avif",
+    glowStrong:"rgba(196,30,45,.55)",
+    spark:"#e6c15c",
+    hub:"assets/taza/hub.webp",
+    hubFile:"Spin button.png",
+    pointer:"assets/taza/pointer.webp",
+    pointerFile:"arrow.webp",
+    prizesDir:"assets/taza/prizes/",
+    collectibles:[
+      {key:"nextlvl", label:"Next Level", icon:"next_level.webp", max:5},
+      {key:"chip100", label:"$100 Chip", icon:"cash_100.webp", max:3},
+      {key:"jackpot", label:"17 Pro Max", icon:"iphone17.webp", max:1}
+    ],
+    rings:[
+      { // outer
+        frame:"assets/taza/outer-frame.webp", frameSize:1096,
+        face:"assets/taza/outer-layer.webp", faceSize:1000,
+        iconRadiusPct:39.65, iconSizePct:9.2, dividerOuter:44.4, dividerInner:34.9, dividerColor:"rgba(224,178,74,.4)",
+        segments:[
+          {label:"Try Again", icon:"try_again.webp"},
+          {label:"Next level", icon:"next_level.webp", collect:"nextlvl"},
+          {label:"$10", icon:"cash_10.webp"},
+          {label:"$20", icon:"cash_20.webp"},
+          {label:"$50", icon:"cash_50.webp"},
+          {label:"$100", icon:"cash_100.webp"}
+        ]
+      },
+      { // middle — this pack's "frame" for level 2 is the full patterned ring face (with its gold border baked in), not a hollow overlay,
+        // so it belongs in the face slot; the plain red disc sits behind it, fully hidden, just to fill any edge gap
+        frame:"assets/taza/middle-layer.webp", frameSize:600, frameBehind:true,
+        face:"assets/taza/middle-frame.webp", faceSize:760,
+        iconRadiusPct:26.75, iconSizePct:8.3, dividerOuter:31.2, dividerInner:22.3, dividerColor:"rgba(224,178,74,.4)",
+        segments:[
+          {label:"$200", icon:"cash_200.webp", collect:"chip100"},
+          {label:"$500", icon:"cash_500.webp"},
+          {label:"Try Again", icon:"try_again.webp"},
+          {label:"Next level", icon:"next_level.webp"}
+        ]
+      },
+      { // inner
+        frame:"assets/taza/inner-frame.webp", frameSize:469,
+        face:"assets/taza/inner-layer.webp", faceSize:420, faceScale:1.08,
+        iconRadiusPct:13.55, iconSizePct:10.2, dividerOuter:18.8, dividerInner:8.3, dividerColor:"rgba(224,178,74,.3)",
+        segments:[
+          {label:"PS5", icon:"ps5.webp"},
+          {label:"17 Pro Max", icon:"iphone17.webp", collect:"jackpot"},
+          {label:"$200", icon:"cash_200.webp"},
+          {label:"$500", icon:"cash_500.webp"}
+        ]
+      }
+    ]
+  };
+
+  var HAYEBET = {
+    key:"hayebet",
+    label:"Savanna",
+    bg:"assets/hayebet/bg.webp",
+    glowStrong:"rgba(150,224,120,.5)",
+    spark:"#c8f28a",
+    hub:"assets/hayebet/hub.webp", hubFile:"Spin button.png",
+    pointer:"assets/hayebet/pointer.webp", pointerFile:"Arrow.png",
+    prizesDir:"assets/hayebet/prizes/",
+    collectibles:[
+      {key:"nextlvl", label:"Next Level", icon:"next_level.webp", max:5},
+      {key:"midbonus", label:"Hot to Burn", icon:"hot_to_burn.webp", max:3},
+      {key:"jackpot", label:"Sizzling Blaze", icon:"sizzling_blaze.webp", max:1}
+    ],
+    rings:[
+      { // outer — icons sit inside the frame's own transparent hole (below its inner wood edge, ~44%)
+        // and above where the middle ring's disc/frame physically reaches (~34%), so neither covers them
+        frame:"assets/hayebet/outer-frame.webp", frameSize:560,
+        face:"assets/hayebet/outer-layer.webp", faceSize:500,
+        iconRadiusPct:39.25, iconSizePct:10.5, dividerOuter:43.5, dividerInner:35.0, dividerColor:"rgba(60,42,26,.4)",
+        segments:[
+          {label:"Try Again", icon:"try_again.webp"},
+          {label:"Next level", icon:"next_level.webp", collect:"nextlvl"},
+          {label:"10 Free Spins", icon:"freespins_10.webp"},
+          {label:"Bonus 20 ETB", icon:"bonus_20etb.webp"},
+          {label:"Burning Ice 40", icon:"burning_ice.webp"},
+          {label:"Foxy Hot 20", icon:"foxy_hot.webp"}
+        ]
+      },
+      { // middle — same logic: inside its own frame's hole (~29%), outside the inner ring's reach (~20%)
+        frame:"assets/hayebet/middle-frame.webp", frameSize:380,
+        face:"assets/hayebet/middle-layer.webp", faceSize:360,
+        iconRadiusPct:25.0, iconSizePct:9.0, dividerOuter:28.5, dividerInner:21.5, dividerColor:"rgba(200,242,138,.4)",
+        segments:[
+          {label:"20 Free Spins", icon:"freespins_20.webp"},
+          {label:"Bonus 50 ETB", icon:"bonus_50etb.webp"},
+          {label:"Hot to Burn", icon:"hot_to_burn.webp", collect:"midbonus"},
+          {label:"Multi Hot 5", icon:"multi_hot.webp"}
+        ]
+      },
+      { // inner — inside its own frame's hole (~18%), outside the hub button (~8.5%)
+        frame:"assets/hayebet/inner-frame.webp", frameSize:230,
+        face:"assets/hayebet/inner-layer.webp", faceSize:210,
+        iconRadiusPct:13.0, iconSizePct:10.5, dividerOuter:17.5, dividerInner:8.5, dividerColor:"rgba(60,42,26,.3)",
+        segments:[
+          {label:"30 Free Spins", icon:"freespins_30.webp"},
+          {label:"Bonus 100 ETB", icon:"bonus_100etb.webp"},
+          {label:"Bonus 250 ETB", icon:"bonus_250etb.webp"},
+          {label:"Sizzling Blaze", icon:"sizzling_blaze.webp", collect:"jackpot"}
+        ]
+      }
+    ]
+  };
+
+  var THUNDER = {
+    key:"thunder",
+    label:"Thunder",
+    dedupeRingAssets:true,
+    bg:"assets/thunder/bg.avif",
+    glowStrong:"rgba(60,110,255,.6)",
+    spark:"#ffd54a",
+    hub:"assets/thunder/hub.webp", hubFile:"Spin button.png",
+    pointer:"assets/thunder/pointer.webp", pointerFile:"arrow.png",
+    prizesDir:"assets/thunder/prizes/",
+    collectibles:[
+      {key:"nextlvl", label:"Next Level", icon:"next_level.webp", max:5},
+      {key:"shield", label:"Shield", icon:"shield.webp", max:3},
+      {key:"jackpot", label:"Golden Raiden", icon:"golden_raiden.webp", max:1}
+    ],
+    rings:[
+      { // outer — this pack's frame art is an opaque disc with its own border baked in (same construction as
+        // Tazabet's middle ring), so it goes in the face slot; the plain background disc sits hidden behind it
+        frame:"assets/thunder/outer-layer.webp", frameSize:500, frameBehind:true,
+        face:"assets/thunder/outer-frame.webp", faceSize:560,
+        iconRadiusPct:41.75, iconSizePct:7.5, dividerOuter:46.0, dividerInner:37.5, dividerColor:"rgba(255,213,74,.4)",
+        segments:[
+          {label:"Try Again", icon:"try_again.webp"},
+          {label:"Next level", icon:"next_level.webp", collect:"nextlvl"},
+          {label:"40 Free Spins", icon:"freespins_40.webp"},
+          {label:"Sports Bonus 5M ₺", icon:"sports_bonus_5m.webp"},
+          {label:"Casino Bonus 5M ₺", icon:"casino_bonus_5m.webp"},
+          {label:"Free Bet 3M ₺", icon:"freebet_3m.webp"},
+          {label:"Gift", icon:"gift.webp"}
+        ]
+      },
+      {
+        frame:"assets/thunder/middle-layer.webp", frameSize:360, frameBehind:true,
+        face:"assets/thunder/middle-frame.webp", faceSize:380,
+        iconRadiusPct:28.5, iconSizePct:9.5, dividerOuter:34.0, dividerInner:23.0, dividerColor:"rgba(60,110,255,.4)",
+        segments:[
+          {label:"45 Free Spins", icon:"freespins_45.webp"},
+          {label:"Sports Bonus 7.5M ₺", icon:"sports_bonus_7_5m.webp"},
+          {label:"Casino Bonus 7.5M ₺", icon:"casino_bonus_7_5m.webp"},
+          {label:"Free Bet 3.5M ₺", icon:"freebet_3_5m.webp"},
+          {label:"Shield", icon:"shield.webp", collect:"shield"},
+          {label:"Armor", icon:"armor.webp"}
+        ]
+      },
+      {
+        frame:"assets/thunder/inner-layer.webp", frameSize:210, frameBehind:true,
+        face:"assets/thunder/inner-frame.webp", faceSize:230,
+        iconRadiusPct:14.3, iconSizePct:10.3, dividerOuter:20.3, dividerInner:8.3, dividerColor:"rgba(255,213,74,.35)",
+        segments:[
+          {label:"50 Free Spins", icon:"freespins_50.webp"},
+          {label:"Sports Bonus 10M ₺", icon:"sports_bonus_10m.webp"},
+          {label:"Casino Bonus 10M ₺", icon:"casino_bonus_10m.webp"},
+          {label:"Free Bet 5.5M ₺", icon:"freebet_5_5m.webp"},
+          {label:"Golden Raiden", icon:"golden_raiden.webp", collect:"jackpot"}
+        ]
+      }
+    ]
+  };
+
+  var THEMES = { greek:GREEK, lava:LAVA, ggplay:GGPLAY, fifa:FIFA, taza:TAZA, hayebet:HAYEBET, thunder:THUNDER };
+
+  var stage = document.getElementById("stage");
+  var stageBg = document.getElementById("stageBg");
+  var assembly = document.getElementById("ringAssembly");
+  var motesHost = document.getElementById("motes");
+  var hub = document.getElementById("hub");
+  var spinCountEl = document.getElementById("spinCount");
+  var winFlash = document.getElementById("winFlash");
+  var autospinBtn = document.getElementById("autospin");
+  var prizeGroups = document.getElementById("prizeGroups");
+  var ringAssetGroups = document.getElementById("ringAssetGroups");
+  var collectRows = document.getElementById("collectRows");
+
+  var allIconEls = [];
+  var rotation = 0, spins = 0, spinning = false;
+  var collected = {};
+  var current = null;
+
+  function loadTheme(theme){
+    stage.style.setProperty("--bg-img", "url(" + theme.bg + ")");
+    stage.style.setProperty("--glow-strong", theme.glowStrong);
+    stage.style.setProperty("--spark", theme.spark);
+    stage.style.setProperty("--hub-img", "url(" + theme.hub + ")");
+    document.querySelector(".pointer-wrap img").src = theme.pointer;
+
+    assembly.innerHTML = "";
+    allIconEls = [];
+
+    theme.rings.forEach(function(ring){
+      var face = document.createElement("img");
+      face.className = "ring-img";
+      face.src = ring.face;
+      face.alt = "";
+      var faceScale = ring.faceScale || 1;
+      face.style.width = (ring.faceSize * faceScale / theme.rings[0].frameSize * 100) + "%";
+
+      var frame = document.createElement("img");
+      frame.className = "ring-img";
+      frame.src = ring.frame;
+      frame.alt = "";
+      frame.style.width = (ring.frameSize / theme.rings[0].frameSize * 100) + "%";
+
+      // most frame art is a bezel with a transparent center, meant to sit on top and
+      // mask any edge overflow — but some frame art (a glow ring fused to a soft
+      // translucent fill) is meant to sit behind the face instead, so the face covers
+      // the fill and only the glowing rim peeks out around it.
+      if (ring.frameBehind) assembly.appendChild(frame);
+      assembly.appendChild(face);
+
+      var n = ring.segments.length, step = 360 / n;
+
+      if (ring.dividerOuter){
+        var dWrap = document.createElement("div");
+        dWrap.className = "ring-dividers";
+        dWrap.style.width = (ring.dividerOuter * 2) + "%";
+        var innerFrac = (ring.dividerInner / ring.dividerOuter * 100).toFixed(2) + "%";
+        for (var d = 0; d < n; d++){
+          var line = document.createElement("div");
+          line.className = "divider-line";
+          line.style.transform = "rotate(" + (d * step - 90) + "deg)";
+          var dColor = ring.dividerColor || "rgba(255,244,222,.6)";
+          line.style.background = "linear-gradient(to right, transparent 0%, transparent " + innerFrac + ", " + dColor + " " + innerFrac + ", " + dColor + " 100%)";
+          dWrap.appendChild(line);
+        }
+        assembly.appendChild(dWrap);
+      }
+      ring.segments.forEach(function(seg, i){
+        var angle = (seg.angle != null) ? seg.angle : (i * step + step / 2);
+        var rad = (angle - 90) * Math.PI / 180;
+        var x = 50 + ring.iconRadiusPct * Math.cos(rad);
+        var y = 50 + ring.iconRadiusPct * Math.sin(rad);
+
+        var wrap = document.createElement("div");
+        wrap.className = "seg-icon";
+        wrap.style.left = x + "%";
+        wrap.style.top = y + "%";
+        wrap.style.width = ring.iconSizePct + "%";
+        wrap.style.transform = ring.uprightIcons ? "translate(-50%,-50%)" : "translate(-50%,-50%) rotate(" + angle + "deg)";
+
+        var img = document.createElement("img");
+        img.src = theme.prizesDir + seg.icon;
+        img.alt = seg.label;
+        img.style.width = "100%";
+        wrap.appendChild(img);
+
+        wrap.dataset.collect = seg.collect || "";
+        assembly.appendChild(wrap);
+        allIconEls.push(wrap);
+      });
+
+      if (!ring.frameBehind) assembly.appendChild(frame);
+    });
+  }
+
+  function spawnMotes(){
+    motesHost.innerHTML = "";
+    for (var i = 0; i < 16; i++){
+      var m = document.createElement("div");
+      m.className = "mote";
+      var size = 2 + Math.random() * 2.5;
+      m.style.width = size + "px";
+      m.style.height = size + "px";
+      m.style.left = (8 + Math.random() * 84) + "%";
+      m.style.setProperty("--drift", (Math.random() * 50 - 25) + "px");
+      m.style.animationDuration = (5 + Math.random() * 4) + "s";
+      m.style.animationDelay = (Math.random() * 6) + "s";
+      motesHost.appendChild(m);
+    }
+  }
+
+  function setCollectBar(key, max){
+    document.getElementById(key + "Count").textContent = collected[key];
+    document.getElementById(key + "Bar").style.width = (collected[key] / max * 100) + "%";
+  }
+
+  function renderCollectPanel(theme){
+    collected = {};
+    collectRows.innerHTML = "";
+    theme.collectibles.forEach(function(c){
+      collected[c.key] = 0;
+      var row = document.createElement("div");
+      row.className = "collect-row";
+      row.innerHTML =
+        '<div class="collect-icon"><img src="' + theme.prizesDir + c.icon + '" alt=""></div>' +
+        '<div class="collect-meta"><div class="name">' + c.label + '</div>' +
+        '<div class="prog">Collected: <span id="' + c.key + 'Count">0</span>/' + c.max + '</div>' +
+        '<div class="bar"><i id="' + c.key + 'Bar" style="width:0%"></i></div></div>';
+      collectRows.appendChild(row);
+    });
+  }
+
+  function doSpin(){
+    if (spinning) return;
+    spinning = true;
+    hub.classList.add("spinning");
+    hub.disabled = true;
+
+    var outerRing = current.rings[0];
+    var n = outerRing.segments.length, step = 360 / n;
+    var targetIndex = Math.floor(Math.random() * n);
+    var currentMod = ((rotation % 360) + 360) % 360;
+    var targetCenterAngle = targetIndex * step + step / 2;
+    var neededOffset = ((360 - targetCenterAngle) - currentMod + 360) % 360;
+    var extraTurns = 5 + Math.floor(Math.random() * 3);
+    rotation += extraTurns * 360 + neededOffset;
+
+    assembly.style.transform = "rotate(" + rotation + "deg)";
+
+    window.setTimeout(function(){
+      spinning = false;
+      hub.classList.remove("spinning");
+      hub.disabled = false;
+      spins += 1;
+      spinCountEl.textContent = spins;
+
+      var won = outerRing.segments[targetIndex];
+      winFlash.textContent = won.label;
+      winFlash.classList.add("show");
+      window.setTimeout(function(){ winFlash.classList.remove("show"); }, 1600);
+
+      if (won.collect && collected[won.collect] !== undefined){
+        var c = current.collectibles.filter(function(x){ return x.key === won.collect; })[0];
+        var max = c ? c.max : 3;
+        collected[won.collect] = Math.min(max, collected[won.collect] + 1);
+        setCollectBar(won.collect, max);
+      }
+
+      var t = Math.min(1, spins);
+      document.getElementById("tierCount").textContent = t + "/1";
+      document.getElementById("tierBar").style.width = (t * 100) + "%";
+    }, 4300);
+  }
+
+  hub.addEventListener("click", doSpin);
+
+  var autoTimer = null;
+  autospinBtn.addEventListener("click", function(){
+    var on = autospinBtn.getAttribute("aria-pressed") !== "true";
+    autospinBtn.setAttribute("aria-pressed", String(on));
+    if (on){
+      doSpin();
+      autoTimer = window.setInterval(function(){ if (!spinning) doSpin(); }, 5200);
+    } else if (autoTimer){
+      window.clearInterval(autoTimer); autoTimer = null;
+    }
+  });
+
+  document.getElementById("tabAch").addEventListener("click", function(){
+    this.setAttribute("aria-selected","true");
+    document.getElementById("tabRew").setAttribute("aria-selected","false");
+    document.getElementById("panelAch").hidden = false;
+    document.getElementById("panelRew").hidden = true;
+  });
+  document.getElementById("tabRew").addEventListener("click", function(){
+    this.setAttribute("aria-selected","true");
+    document.getElementById("tabAch").setAttribute("aria-selected","false");
+    document.getElementById("panelAch").hidden = true;
+    document.getElementById("panelRew").hidden = false;
+  });
+
+  // ---- asset showcase: background, controls and prize grid, generated from the same config ----
+  function makeTile(iconPath, label){
+    var tile = document.createElement("div");
+    tile.className = "prize-tile";
+    tile.innerHTML = '<div class="prize-swatch"><img src="' + iconPath + '" alt="' + label + '"></div><div class="prize-name">' + label + '</div>';
+    return tile;
+  }
+
+  function renderControls(theme){
+    document.getElementById("bgImage").src = theme.bg;
+    document.getElementById("bgImage").alt = theme.label + " background artwork";
+    document.getElementById("pointerImg").src = theme.pointer;
+    document.getElementById("pointerFile").textContent = theme.pointerFile;
+    document.getElementById("hubImg").src = theme.hub;
+    document.getElementById("hubFile").textContent = theme.hubFile;
+  }
+
+  var ringTierNames = ["Outer ring", "Middle ring", "Inner ring"];
+
+  function joinLabels(names){
+    if (names.length === 1) return names[0];
+    return names.slice(0, -1).join(", ") + " &amp; " + names[names.length - 1];
+  }
+
+  // Display purposes only: which exported file is genuinely the border art vs. the plate art is a question
+  // of what the file itself is, not of which engine slot (face/frame) it was wired into to composite
+  // correctly — a couple of packs wire the visible bordered art into the "face" slot and the plain hidden
+  // plate into the "frame" slot (frameBehind) to get the layering right. Every pack names its exports
+  // consistently ("...-frame.ext" for the border, "...-layer.ext" / "...-fill.ext" for the plate), so that
+  // naming is the reliable signal — sort the ring's two files by it rather than by which engine slot they're in.
+  function classifyRingAssets(ring){
+    var isFrameFile = /-frame\.\w+$/i.test(ring.face) ? "face" : "frame";
+    return isFrameFile === "face"
+      ? { bg: ring.frame, fr: ring.face }
+      : { bg: ring.face, fr: ring.frame };
+  }
+
+  function renderRingAssets(theme){
+    ringAssetGroups.innerHTML = "";
+
+    // Some packs use the exact same background+frame design at every tier, just re-exported at three sizes —
+    // for those, showing all three is just noise, so the theme can opt into a single representative swatch.
+    if (theme.dedupeRingAssets){
+      var only = classifyRingAssets(theme.rings[0]);
+      var group0 = document.createElement("div");
+      group0.className = "ring-asset-group";
+      group0.innerHTML =
+        '<div class="ring-asset-header">All three rings (same design, re-exported per size)</div>' +
+        '<div class="control-grid">' +
+          '<div class="control-card"><div class="control-swatch"><img src="' + only.bg + '" alt="Background"></div><div class="control-label"><b>Background</b></div></div>' +
+          '<div class="control-card"><div class="control-swatch"><img src="' + only.fr + '" alt="Frame"></div><div class="control-label"><b>Frame</b></div></div>' +
+        '</div>';
+      ringAssetGroups.appendChild(group0);
+      return;
+    }
+
+    // group rings that reuse the exact same background+frame pair, so a shared asset isn't shown three times
+    var order = [];
+    var bySig = {};
+    theme.rings.forEach(function(ring, i){
+      var classified = classifyRingAssets(ring);
+      var bg = classified.bg, fr = classified.fr;
+      var sig = bg + "|" + fr;
+      if (!bySig[sig]){ bySig[sig] = { bg: bg, fr: fr, names: [] }; order.push(sig); }
+      bySig[sig].names.push(ringTierNames[i] || ("Ring " + (i + 1)));
+    });
+    order.forEach(function(sig){
+      var entry = bySig[sig];
+      var group = document.createElement("div");
+      group.className = "ring-asset-group";
+      var label = joinLabels(entry.names);
+      group.innerHTML =
+        '<div class="ring-asset-header">' + label + '</div>' +
+        '<div class="control-grid">' +
+          '<div class="control-card"><div class="control-swatch"><img src="' + entry.bg + '" alt="' + label + ' background"></div><div class="control-label"><b>Background</b></div></div>' +
+          '<div class="control-card"><div class="control-swatch"><img src="' + entry.fr + '" alt="' + label + ' frame"></div><div class="control-label"><b>Frame</b></div></div>' +
+        '</div>';
+      ringAssetGroups.appendChild(group);
+    });
+  }
+
+  function renderPrizeShowcase(theme){
+    prizeGroups.innerHTML = "";
+    var total = 0;
+    var seen = {};
+    var grid = document.createElement("div");
+    grid.className = "prize-grid";
+
+    theme.rings.forEach(function(ring){
+      ring.segments.forEach(function(s){
+        if (seen[s.icon]) return;
+        seen[s.icon] = true;
+        total++;
+        grid.appendChild(makeTile(theme.prizesDir + s.icon, s.label));
+      });
+    });
+
+    (theme.extraGroups || []).forEach(function(eg){
+      eg.items.forEach(function(e){
+        if (seen[e.icon]) return;
+        seen[e.icon] = true;
+        total++;
+        grid.appendChild(makeTile(theme.prizesDir + e.icon, e.label));
+      });
+    });
+
+    prizeGroups.appendChild(grid);
+    document.getElementById("prizesHeading").textContent = total + " icons";
+  }
+
+  function setActiveButton(key){
+    var btns = document.querySelectorAll("#themePicker button[data-theme]");
+    for (var i = 0; i < btns.length; i++){
+      btns[i].setAttribute("aria-pressed", String(btns[i].dataset.theme === key));
+    }
+  }
+
+  function selectTheme(key){
+    var theme = THEMES[key];
+    if (!theme || theme === current) { if(theme) setActiveButton(key); return; }
+    current = theme;
+    rotation = 0; spins = 0; spinning = false;
+    hub.classList.remove("spinning");
+    hub.disabled = false;
+    winFlash.classList.remove("show");
+    assembly.style.transition = "none";
+    assembly.style.transform = "rotate(0deg)";
+    requestAnimationFrame(function(){ assembly.style.transition = ""; });
+    spinCountEl.textContent = "0";
+    document.getElementById("tierCount").textContent = "0/1";
+    document.getElementById("tierBar").style.width = "0%";
+    if (autoTimer){ window.clearInterval(autoTimer); autoTimer = null; autospinBtn.setAttribute("aria-pressed","false"); }
+
+    setActiveButton(key);
+    loadTheme(theme);
+    spawnMotes();
+    renderCollectPanel(theme);
+    renderControls(theme);
+    renderRingAssets(theme);
+    renderPrizeShowcase(theme);
+    updateNextThemeNav(key);
+  }
+
+  document.querySelectorAll("#themePicker button[data-theme]").forEach(function(btn){
+    btn.addEventListener("click", function(){ selectTheme(btn.dataset.theme); });
+  });
+
+  var themeOrder = Array.prototype.map.call(
+    document.querySelectorAll("#themePicker button[data-theme]"),
+    function(btn){ return btn.dataset.theme; }
+  );
+  var nextThemeBtn = document.getElementById("nextThemeBtn");
+  var nextThemeDot = document.getElementById("nextThemeDot");
+  var nextThemeName = document.getElementById("nextThemeName");
+
+  function updateNextThemeNav(key){
+    var idx = themeOrder.indexOf(key);
+    var nextKey = themeOrder[(idx + 1) % themeOrder.length];
+    var nextBtn = document.querySelector('#themePicker button[data-theme="' + nextKey + '"]');
+    nextThemeBtn.dataset.theme = nextKey;
+    nextThemeName.textContent = THEMES[nextKey].label;
+    nextThemeDot.style.background = nextBtn ? nextBtn.querySelector(".dot").style.background : "";
+  }
+
+  nextThemeBtn.addEventListener("click", function(){
+    selectTheme(nextThemeBtn.dataset.theme);
+    document.getElementById("stage").scrollIntoView({ behavior:"smooth", block:"center" });
+  });
+
+  selectTheme("greek");
+})();
+</script>
+
+</body></html>
