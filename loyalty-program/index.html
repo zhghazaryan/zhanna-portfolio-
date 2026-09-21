@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Loyalty Program — Rank &amp; Rewards System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    color-scheme:dark;
+    --bg:#0E1018;
+    --surface:#161923;
+    --surface-2:#1B1E29;
+    --text:#F2F2EE;
+    --text-dim:#9BA0AE;
+    --border:rgba(242,242,238,.14);
+    --accent:#D4AF37;
+    --accent-dim:rgba(212,175,55,.35);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Hanken Grotesk",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:"Unbounded",system-ui,sans-serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;margin:0;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 100px;}
+  img{max-width:100%;display:block;}
+
+  .back-home{position:fixed;top:18px;left:18px;z-index:50;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:"Hanken Grotesk",sans-serif;font-weight:600;font-size:13.5px;color:var(--text);background:rgba(8,6,4,.55);border:1px solid var(--border);padding:9px 16px 9px 12px;border-radius:999px;backdrop-filter:blur(6px);transition:background .15s ease,transform .15s ease;}
+  .back-home:hover{background:rgba(8,6,4,.8);transform:translateY(-1px);}
+  .back-home svg{width:16px;height:16px;flex:none;}
+  @media (max-width:480px){ .back-home span{display:none;} .back-home{padding:9px;} }
+
+  .masthead{max-width:720px;margin:0 auto;padding:74px 20px 28px;text-align:center;}
+  .eyebrow{font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:12.5px;color:var(--accent);margin-bottom:14px;}
+  .masthead h1{font-size:clamp(28px,4vw,42px);letter-spacing:-.02em;}
+  .masthead p{color:var(--text-dim);font-size:15.5px;line-height:1.65;max-width:58ch;margin:16px auto 0;}
+
+  .theme-picker{display:flex;gap:8px;justify-content:center;margin:26px 0 4px;flex-wrap:wrap;}
+  .theme-picker button{font-weight:600;font-size:14px;letter-spacing:.01em;padding:9px 20px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;transition:transform .15s ease,border-color .15s ease,color .15s ease;font-family:inherit;}
+  .theme-picker button[aria-pressed="true"]{color:var(--text);border-color:var(--accent);background:var(--surface-2);}
+  .theme-picker button.soon{opacity:.5;border-style:dashed;cursor:not-allowed;}
+  .theme-picker button.soon:hover{transform:none;}
+  .theme-picker button:not(.soon):hover{transform:translateY(-2px);border-color:var(--accent);color:var(--text);}
+  .picker-note{text-align:center;font-size:12.5px;color:var(--text-dim);margin:0 0 8px;}
+
+  .banner{margin-top:32px;border-radius:18px;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.55);}
+  .banner img{width:100%;}
+
+  section{margin-top:68px;}
+  section .num{font-weight:700;color:var(--accent);font-size:13px;letter-spacing:.14em;margin-bottom:8px;text-transform:uppercase;}
+  section h2{font-size:clamp(21px,2.6vw,26px);margin-bottom:12px;}
+  section > p.lede{color:var(--text-dim);max-width:62ch;line-height:1.7;font-size:15.5px;}
+
+  .tier-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:14px;margin-top:26px;}
+  .tier-card{text-align:center;}
+  .tier-card .badge{border-radius:16px;background:var(--surface);border:1px solid var(--border);padding:14px;}
+  .tier-card .badge img{border-radius:8px;}
+  .tier-card .name{margin-top:10px;font-size:13px;font-weight:600;}
+  @media (max-width:860px){ .tier-grid{grid-template-columns:repeat(4,1fr);} }
+  @media (max-width:520px){ .tier-grid{grid-template-columns:repeat(3,1fr);} }
+
+  .level-row{margin-top:22px;}
+  .level-row:first-child{margin-top:26px;}
+  .level-row-head{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;}
+  .level-row-head b{font-family:"Unbounded",sans-serif;font-weight:600;font-size:14.5px;}
+  .level-row-head span{font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;}
+  .level-strip{display:flex;align-items:center;gap:10px;overflow-x:auto;padding-bottom:4px;}
+  .level-strip img{width:64px;height:64px;flex:none;border-radius:50%;background:var(--surface);}
+  .level-strip .tier-thumb{width:72px;height:72px;border-radius:14px;background:var(--surface-2);border:1px solid var(--border);padding:6px;}
+  .level-strip .divider{width:1px;height:44px;background:var(--border);flex:none;margin:0 2px;}
+
+  .reward-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:14px;margin-top:26px;}
+  .reward-tile{text-align:center;}
+  .reward-tile .icon{border-radius:16px;background:var(--surface);border:1px solid var(--border);padding:14px;}
+  .reward-tile .icon img{border-radius:8px;}
+  .reward-tile .name{margin-top:10px;font-size:13px;font-weight:600;}
+
+  footer{max-width:720px;margin:80px auto 0;padding:24px 20px 0;border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:13px;}
+</style>
+</head>
+<body>
+
+<a class="back-home" href="../#/work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4"/><path d="m11 5-7 7 7 7"/></svg><span>All projects</span></a>
+
+<div class="masthead">
+  <div class="eyebrow">Case study · Lynon</div>
+  <h1>Loyalty Program — Rank &amp; Rewards System</h1>
+  <p>A tiered loyalty program: seven ranks, each with its own progression track and reward set. Same system rebuilt per partner brand — this page collects the visual production for each art direction.</p>
+  <div class="theme-picker" id="themePicker">
+    <button data-theme="samurai" aria-pressed="true">Samurai</button>
+    <button data-theme="viking" aria-pressed="false">Viking</button>
+    <button data-theme="military" aria-pressed="false">Military</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="banner"><img id="bannerImg" src="assets/samurai/banner-desktop.jpg" alt="Samurai theme banner"></div>
+
+  <section id="tiers">
+    <div class="num">01 — Ranks</div>
+    <h2 id="tiersHeading">Seven ranks, Disciple to Shogun</h2>
+    <p class="lede">The main tier badges — each one the visual identity for a full rank of the program.</p>
+    <div class="tier-grid" id="tierGrid"></div>
+  </section>
+
+  <section id="levels">
+    <div class="num">02 — Progression</div>
+    <h2>Inner levels, per rank</h2>
+    <p class="lede">Every rank has its own sub-levels, marked by the same badge with a progress ring that fills in as players climb toward the next rank.</p>
+    <div id="levelRows"></div>
+  </section>
+
+  <section id="rewards">
+    <div class="num">03 — Rewards</div>
+    <h2 id="rewardsHeading">Reward icon set</h2>
+    <p class="lede" id="rewardsLede">The reward categories used across the program's level-up rewards.</p>
+    <div class="reward-grid" id="rewardGrid"></div>
+  </section>
+
+  <footer>Loyalty Program — rank &amp; rewards visual system · art direction &amp; visual design by me at Lynon</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var GENERIC_REWARDS = [
+    {file:"bonus.png", label:"Bonus"},
+    {file:"cashback.png", label:"Cashback"},
+    {file:"high-withdrawal-limit.png", label:"High Withdrawal Limit"},
+    {file:"real-money.png", label:"Real Money"},
+    {file:"sport-free-bet.png", label:"Sport Free Bet"},
+    {file:"vip-support.png", label:"VIP Support"}
+  ];
+
+  var THEMES = {
+    samurai: {
+      label: "Samurai",
+      accent: "#D4AF37",
+      banner: "assets/samurai/banner-desktop.jpg",
+      heading: "Seven ranks, Disciple to Shogun",
+      tiers: [
+        {key:"1-disciple", label:"Disciple", levelDir:"novice", count:7},
+        {key:"2-bushi", label:"Bushi", levelDir:"bushi", count:6},
+        {key:"3-samurai", label:"Samurai", levelDir:"samurai", count:7},
+        {key:"4-elite-samurai", label:"Elite Samurai", levelDir:"elite-samurai", count:7},
+        {key:"5-hatamoto", label:"Hatamoto", levelDir:"hatamoto", count:7},
+        {key:"6-daimyo", label:"Daimyo", levelDir:"daimyo", count:7},
+        {key:"7-shogun", label:"Shogun", levelDir:"shogun", count:7}
+      ],
+      rewardsDir: "rewards",
+      rewardsHeading: "Reward icon set",
+      rewardsLede: "The reward categories used across the program's level-up rewards.",
+      rewards: GENERIC_REWARDS
+    },
+    viking: {
+      label: "Viking",
+      accent: "#5FA8D3",
+      banner: "assets/viking/banner-desktop.jpg",
+      heading: "Seven ranks, Thrall to Konungr",
+      tiers: [
+        {key:"1-thrall", label:"Thrall", levelDir:"thrall", count:4},
+        {key:"2-karl", label:"Karl", levelDir:"karl", count:4},
+        {key:"3-viking", label:"Viking", levelDir:"viking", count:4},
+        {key:"4-elite-viking", label:"Elite Viking", levelDir:"elite-viking", count:4},
+        {key:"5-hersir", label:"Hersir", levelDir:"hersir", count:4},
+        {key:"6-jarl", label:"Jarl", levelDir:"jarl", count:4},
+        {key:"7-konungr", label:"Konungr", levelDir:"konungr", count:4}
+      ],
+      rewardsDir: "prizes",
+      rewardsHeading: "Prize icon set",
+      rewardsLede: "The full prize catalog used across the program's level-up rewards.",
+      rewards: [
+        {file:"account-manager.png", label:"Account Manager"},
+        {file:"airpods.png", label:"AirPods"},
+        {file:"boost.png", label:"Boost"},
+        {file:"cash-money.png", label:"Cash Money"},
+        {file:"cashback.png", label:"Cashback"},
+        {file:"exclusive-vip-manager.png", label:"Exclusive VIP Manager"},
+        {file:"freespin.png", label:"Free Spin"},
+        {file:"laptop.png", label:"Laptop"},
+        {file:"private-event-invitation.png", label:"Private Event Invitation"},
+        {file:"smartphone.png", label:"Smartphone"},
+        {file:"smartwatch.png", label:"Smartwatch"},
+        {file:"sport-cashback.png", label:"Sport Cashback"},
+        {file:"trip.png", label:"Trip"},
+        {file:"vip-support.png", label:"VIP Support"},
+        {file:"wagering-bonus.png", label:"Wagering Bonus"},
+        {file:"wireless-earbuds.png", label:"Wireless Earbuds"}
+      ]
+    },
+    military: {
+      label: "Military",
+      accent: "#9CAF6E",
+      banner: "assets/military/banner-desktop.jpg",
+      heading: "Seven ranks, Recruit to General",
+      tiers: [
+        {key:"1-recruit", label:"Recruit", levelDir:"recruit", count:7},
+        {key:"2-private", label:"Private", levelDir:"private", count:7},
+        {key:"3-corporal", label:"Corporal", levelDir:"corporal", count:7},
+        {key:"4-sergeant", label:"Sergeant", levelDir:"sergeant", count:7},
+        {key:"5-lieutenant", label:"Lieutenant", levelDir:"lieutenant", count:7},
+        {key:"6-commander", label:"Commander", levelDir:"commander", count:7},
+        {key:"7-general", label:"General", levelDir:"general", count:7}
+      ],
+      rewardsDir: "rewards",
+      rewardsHeading: "Reward icon set",
+      rewardsLede: "The reward categories used across the program's level-up rewards.",
+      rewards: GENERIC_REWARDS
+    }
+  };
+
+  var tierGrid = document.getElementById("tierGrid");
+  var levelRows = document.getElementById("levelRows");
+  var rewardGrid = document.getElementById("rewardGrid");
+  var bannerImg = document.getElementById("bannerImg");
+  var tiersHeading = document.getElementById("tiersHeading");
+  var rewardsHeading = document.getElementById("rewardsHeading");
+  var rewardsLede = document.getElementById("rewardsLede");
+
+  function renderTheme(key){
+    var theme = THEMES[key];
+    var base = "assets/" + key + "/";
+
+    document.documentElement.style.setProperty("--accent", theme.accent);
+    bannerImg.src = theme.banner;
+    bannerImg.alt = theme.label + " theme banner";
+    tiersHeading.textContent = theme.heading;
+
+    tierGrid.innerHTML = "";
+    theme.tiers.forEach(function(t){
+      var el = document.createElement("div");
+      el.className = "tier-card";
+      el.innerHTML = '<div class="badge"><img src="' + base + 'tiers/' + t.key + '.png" alt="' + t.label + ' badge"></div><div class="name">' + t.label + '</div>';
+      tierGrid.appendChild(el);
+    });
+
+    levelRows.innerHTML = "";
+    theme.tiers.forEach(function(t){
+      var row = document.createElement("div");
+      row.className = "level-row";
+      var imgs = '<img class="tier-thumb" src="' + base + 'tiers/' + t.key + '.png" alt="' + t.label + ' rank badge">';
+      imgs += '<div class="divider"></div>';
+      if (t.count > 0){
+        for (var i = 1; i <= t.count; i++){
+          var n = (i < 10 ? "0" + i : "" + i);
+          imgs += '<img src="' + base + 'levels/' + t.levelDir + '/' + n + '.png" alt="' + t.label + ' level ' + i + '">';
+        }
+      }
+      var countLabel = t.count > 0 ? (t.count + " levels") : "starting rank";
+      row.innerHTML = '<div class="level-row-head"><b>' + t.label + '</b><span>' + countLabel + '</span></div><div class="level-strip">' + imgs + '</div>';
+      levelRows.appendChild(row);
+    });
+
+    rewardsHeading.textContent = theme.rewardsHeading;
+    rewardsLede.textContent = theme.rewardsLede;
+    rewardGrid.innerHTML = "";
+    theme.rewards.forEach(function(r){
+      var el = document.createElement("div");
+      el.className = "reward-tile";
+      el.innerHTML = '<div class="icon"><img src="' + base + theme.rewardsDir + '/' + r.file + '" alt="' + r.label + ' icon"></div><div class="name">' + r.label + '</div>';
+      rewardGrid.appendChild(el);
+    });
+  }
+
+  document.querySelectorAll("#themePicker button[data-theme]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll("#themePicker button[data-theme]").forEach(function(b){
+        b.setAttribute("aria-pressed", String(b === btn));
+      });
+      renderTheme(btn.dataset.theme);
+    });
+  });
+
+  renderTheme("samurai");
+})();
+</script>
+
+</body>
+</html>
